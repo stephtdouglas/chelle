@@ -79,7 +79,7 @@ def collect_all(file_list, table_file):
 
 
 def plot_test():
-    dat = at.read("hecto_testout.dat")
+    dat = at.read("/n/scratchfls/conroy_lab/stdouglas/outputs/chelle_testout.dat")
 
     weights = np.exp(dat["log(wt)"]-dat["log(z)"][-1])
 
@@ -93,10 +93,11 @@ def plot_test():
     ax = plt.subplot(313)
     _ = ax.hist(dat["Vrot"],weights=weights,bins=30)
     ax.set_xlabel("Vrot")
-    plt.savefig("hecto_testout.png")
+    plt.savefig("/n/scratchfls/conroy_lab/stdouglas/outputs/hecto_testout.png")
     plt.close()
 
 if __name__=="__main__":
 
-    files = at.read("test_outs.lst")
-    collect_all(files["filename"],"test_collect.csv")
+    files = at.read("/n/scratchfls/conroy_lab/stdouglas/outputs/test_outs.lst")
+    collect_all(files["filename"],
+                "/n/scratchfls/conroy_lab/stdouglas/outputs/test_collect.csv")

@@ -22,10 +22,10 @@ def make_blaze(filename):
     print(min(ww),max(ww))
     return blaze
 
-blaze1 = make_blaze("/n/scratchlfs/conroy_lab/stdouglas/payne_demo/master_blaze_det1_smooth.fits")
-blaze2 = make_blaze("/n/scratchlfs/conroy_lab/stdouglas/payne_demo/master_blaze_det2_smooth.fits")
+blaze1 = make_blaze("/n/home13/stdouglas/data/Hectochelle/master_blaze_det1_smooth.fits")
+blaze2 = make_blaze("/n/home13/stdouglas/data/Hectochelle/master_blaze_det2_smooth.fits")
 
-def read_hecto(filename,wave_ext=0,flux_ext=1,err_ext=2,idl=True):
+def read_chelle(filename,wave_ext=0,flux_ext=1,err_ext=2,idl=True):
     if os.path.exists(filename):
         wave = np.array(fits.getdata(filename,0))
         flux_raw = np.array(fits.getdata(filename,1))
@@ -80,10 +80,10 @@ def read_hecto(filename,wave_ext=0,flux_ext=1,err_ext=2,idl=True):
 
     return wave, flux, err, realspec, obj_id
 
-def write_hecto(filename,outfile_base,output_dir):
+def write_chelle(filename,outfile_base,output_dir):
 
     if os.path.exists(filename):
-        wav, flu, err, realspec, obj_id = read_hecto(filename)
+        wav, flu, err, realspec, obj_id = read_chelle(filename)
     else:
         print(filename,"does not exist")
         return
@@ -97,11 +97,11 @@ def write_hecto(filename,outfile_base,output_dir):
 if __name__=="__main__":
     hectofile = "/n/home13/stdouglas/data/Hectochelle/2018.0527/RV31_1x1/hectochelle_NGC6811_2018a_1/spHect-hectochelle_NGC6811_2018a_1.2512-0100.fits"
 
-    write_hecto(hectofile,"test",
-                "/n/scratchlfs/conroy_lab/stdouglas/payne_demo/spectra/")
+#    write_chelle(hectofile,"test",
+#                "/n/scratchlfs/conroy_lab/stdouglas/payne_demo/spectra/")
 
-"""
-    wav, flu, err, realspec, obj_id  = read_hecto(hectofile)
+
+    wav, flu, err, realspec, obj_id  = read_chelle(hectofile)
     print(wav[np.where(realspec)[0][0]])
 
     plt.figure(figsize=(10,5))
@@ -110,7 +110,7 @@ if __name__=="__main__":
     for i in np.where(realspec)[0]:
         plt.plot(wav[i], flu[i], alpha=0.25)
 
-    plt.savefig("/n/scratchlfs/conroy_lab/stdouglas/payne_demo/test_hecto.png")
+    plt.savefig("/n/scratchlfs/conroy_lab/stdouglas/chelle/plots/test_hecto.png")
     plt.close()
 
     i = np.where(obj_id=='9531080')[0][0]
@@ -119,6 +119,5 @@ if __name__=="__main__":
     plt.plot(wav[i], flu[i])
     #plt.ylim(np.percentile(flu[i][np.isfinite(flu[i])],1),
     #         np.percentile(flu[i][np.isfinite(flu[i])],99))
-    plt.savefig("/n/scratchlfs/conroy_lab/stdouglas/payne_demo/test_hecto_9531080.png")
+    plt.savefig("/n/scratchlfs/conroy_lab/stdouglas/chelle/plots/test_hecto_9531080.png")
     plt.close()
-"""
