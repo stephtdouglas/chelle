@@ -9,7 +9,7 @@ import matplotlib
 matplotlib.use("AGG")
 import matplotlib.pyplot as plt
 
-import get_hecto
+from chelle import get_chelle
 
 inputdict = {}
 
@@ -20,7 +20,7 @@ inputdict['sampler']['samplemethod'] = 'rwalk'
 inputdict['sampler']['npoints'] = 125
 inputdict['sampler']['samplerbounds'] = 'multi'
 inputdict['sampler']['flushnum'] = 100
-inputdict['sampler']['delta_logz_final'] = 0.05
+inputdict['sampler']['delta_logz_final'] = 1.0
 inputdict['sampler']['bootstrap'] = 0
 inputdict['sampler']['walks'] = 25
 # inputdict['sampler']['slices'] = 500
@@ -47,7 +47,7 @@ inputdict['priordict']['blaze_coeff'] = coeffarr
 
 ##################
 
-def run_one_hecto(wav, flu, err, obj_id, output_dir, inputdict=inputdict,
+def run_one_chelle(wav, flu, err, obj_id, output_dir, inputdict=inputdict,
                   runspec=True, runphot=False):
     
     if runspec:
@@ -68,7 +68,7 @@ def run_one_hecto(wav, flu, err, obj_id, output_dir, inputdict=inputdict,
     inputdict['priordict']['Av']     = {'pv_uniform':[0.0,1.0]}
 
     inputdict['output'] = os.path.join(output_dir,
-                                       'hecto_test_{0}.dat'.format(obj_id))
+                                       'chelle_test_{0}.dat'.format(obj_id))
 
     FS = fitstar.FitPayne()
     print('---------------')
@@ -101,16 +101,16 @@ def run_one_hecto(wav, flu, err, obj_id, output_dir, inputdict=inputdict,
     sys.stdout.flush()
 
 
-def run_hecto(filename):
+def run_chelle(filename):
 
-    wav, flu, err, realspec, obj_id  = get_hecto.read_hecto(hectofile)
+    wav, flu, err, realspec, obj_id  = get_chelle.read_chelle(chellefile)
     #i = np.where(obj_id=='9531080')[0][0]
     #i = np.where(obj_id=='9470739')[0][0]
     #i = np.where(obj_id=='9471796')[0][0]
     real_idx = np.where(realspec)[0]
     print(len(real_idx),"total spectra in this field")
 
-    j=os.getenv("SLURM_ARRAY_TASK_ID",default=0)
+    j=os.getenv("SLURM_ARRAY_TASK_ID",default=20)
     print(j)
     i = real_idx[int(j)]
     print(i,obj_id[i])
@@ -121,10 +121,10 @@ def run_hecto(filename):
     good = np.isfinite(wav[i]) & np.isfinite(flu[i]) & np.isfinite(err[i]) & (wav[i]<5290) & (wav[i]>5160)
     print(len(np.where(good)[0]),"good points in the spectrum")
 
-    run_one_hecto(wav[i][good], flu[i][good], err[i][good], obj_id[i],
-                  output_dir="/n/scratchlfs/conroy_lab/stdouglas/payne_demo/outputs")
+    run_one_chelle(wav[i][good], flu[i][good], err[i][good], obj_id[i],
+                  output_dir="/n/scratchlfs/conroy_lab/stdouglas/chelle/outputs")
 
 if __name__=="__main__":
 
-    hectofile = "/n/home13/stdouglas/data/Hectochelle/2018.0527/RV31_1x1/hectochelle_NGC6811_2018a_1/spHect-hectochelle_NGC6811_2018a_1.2512-0100.fits"
-    run_hecto(hectofile)
+    chellefile = "/n/home13/stdouglas/data/Hectochelle/2018.0527/RV31_1x1/hectochelle_NGC6811_2018a_1/spHect-hectochelle_NGC6811_2018a_1.2512-0100.fits"
+    run_chelle(chellefile)
